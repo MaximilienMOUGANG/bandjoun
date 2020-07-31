@@ -1,0 +1,197 @@
+// To parse this JSON data, do
+//
+//     final campus = campusFromJson(jsonString);
+//     final servicesPublics = servicesPublicsFromJson(jsonString);
+//     final etablissementSanitaires = etablissementSanitairesFromJson(jsonString);
+//     final cites = citesFromJson(jsonString);
+
+import 'dart:convert';
+
+List<Campus> campusFromJson(String str) => List<Campus>.from(json.decode(str).map((x) => Campus.fromJson(x)));
+
+String campusToJson(List<Campus> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+List<ServicesPublics> servicesPublicsFromJson(String str) => List<ServicesPublics>.from(json.decode(str).map((x) => ServicesPublics.fromJson(x)));
+
+String servicesPublicsToJson(List<ServicesPublics> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+List<EtablissementSanitaires> etablissementSanitairesFromJson(String str) => List<EtablissementSanitaires>.from(json.decode(str).map((x) => EtablissementSanitaires.fromJson(x)));
+
+String etablissementSanitairesToJson(List<EtablissementSanitaires> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+List<Cites> citesFromJson(String str) => List<Cites>.from(json.decode(str).map((x) => Cites.fromJson(x)));
+
+String citesToJson(List<Cites> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Campus {
+    Campus({
+        this.idCampus,
+        this.nomCampus,
+        this.adresse,
+    });
+
+    int idCampus;
+    String nomCampus;
+    Adresse adresse;
+
+    factory Campus.fromJson(Map<String, dynamic> json) => Campus(
+        idCampus: json["id_campus"],
+        nomCampus: json["nom_campus"],
+        adresse: Adresse.fromJson(json["adresse"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id_campus": idCampus,
+        "nom_campus": nomCampus,
+        "adresse": adresse.toJson(),
+    };
+}
+
+class Adresse {
+    Adresse({
+        this.geo,
+    });
+
+    Geo geo;
+
+    factory Adresse.fromJson(Map<String, dynamic> json) => Adresse(
+        geo: Geo.fromJson(json["geo"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "geo": geo.toJson(),
+    };
+}
+
+class Geo {
+    Geo({
+        this.lat,
+        this.lng,
+    });
+
+    String lat;
+    String lng;
+
+    factory Geo.fromJson(Map<String, dynamic> json) => Geo(
+        lat: json["lat"],
+        lng: json["lng"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "lat": lat,
+        "lng": lng,
+    };
+}
+
+class ServicesPublics {
+    ServicesPublics({
+        this.idService,
+        this.nomService,
+        this.adresse,
+    });
+
+    int idService;
+    String nomService;
+    Adresse adresse;
+
+    factory ServicesPublics.fromJson(Map<String, dynamic> json) => ServicesPublics(
+        idService: json["id_service"],
+        nomService: json["nom_service"],
+        adresse: Adresse.fromJson(json["adresse"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id_service": idService,
+        "nom_service": nomService,
+        "adresse": adresse.toJson(),
+    };
+}
+
+class EtablissementSanitaires {
+    EtablissementSanitaires({
+        this.idHopital,
+        this.nomHopital,
+        this.adresse,
+    });
+
+    int idHopital;
+    String nomHopital;
+    Adresse adresse;
+
+    factory EtablissementSanitaires.fromJson(Map<String, dynamic> json) => EtablissementSanitaires(
+        idHopital: json["id_hopital"],
+        nomHopital: json["nom_hopital"],
+        adresse: Adresse.fromJson(json["adresse"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id_hopital": idHopital,
+        "nom_hopital": nomHopital,
+        "adresse": adresse.toJson(),
+    };
+}
+
+class Cites {
+    Cites({
+        this.idCite,
+        this.nomCite,
+        this.nomBailleur,
+        this.prenomBailleur,
+        this.typeCite,
+        this.prixPublic,
+        this.adresse,
+        this.tlphoneBailleur,
+    });
+
+    int idCite;
+    String nomCite;
+    String nomBailleur;
+    String prenomBailleur;
+    TypeCite typeCite;
+    String prixPublic;
+    Adresse adresse;
+    String tlphoneBailleur;
+
+    factory Cites.fromJson(Map<String, dynamic> json) => Cites(
+        idCite: json["id_cite"],
+        nomCite: json["nom_cite"],
+        nomBailleur: json["nom_bailleur"],
+        prenomBailleur: json["prenom_bailleur"],
+        typeCite: typeCiteValues.map[json["type_cite"]],
+        prixPublic: json["prix_public"],
+        adresse: Adresse.fromJson(json["adresse"]),
+        tlphoneBailleur: json["téléphone_bailleur"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id_cite": idCite,
+        "nom_cite": nomCite,
+        "nom_bailleur": nomBailleur,
+        "prenom_bailleur": prenomBailleur,
+        "type_cite": typeCiteValues.reverse[typeCite],
+        "prix_public": prixPublic,
+        "adresse": adresse.toJson(),
+        "téléphone_bailleur": tlphoneBailleur,
+    };
+}
+
+enum TypeCite { MODERNE, CLASSIQUE }
+
+final typeCiteValues = EnumValues({
+    "Classique": TypeCite.CLASSIQUE,
+    "Moderne": TypeCite.MODERNE
+});
+
+class EnumValues<T> {
+    Map<String, T> map;
+    Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+        if (reverseMap == null) {
+            reverseMap = map.map((k, v) => new MapEntry(v, k));
+        }
+        return reverseMap;
+    }
+}
